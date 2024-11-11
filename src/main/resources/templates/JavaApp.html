@@ -1,42 +1,25 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" >
 <head>
 	<meta charset="UTF-8">
-	<title>セマンティックネット</title>
+	<title>就活情報サイト</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container">
-	<h3>セマンティックネット</h3>
-	<table class="table table-bordered">
-		<thead class="thead-dark">
-		<tr>
-			<th>Tail Node<br/>(主語)</th>
-			<th>Link<br/>(述語)</th>
-			<th>Head Node<br/>(目的語)</th>
-		</tr>
-		</thead>
-		<tbody>
-		<tr th:each="link : ${sn.getLinks()}">
-			<td th:text="${link.getTail()}"></td>
-			<td th:text="${link.getLabel()}"></td>
-			<td th:text="${link.getHead()}"></td>
-		</tr>
-		</tbody>
-	</table>
-
-	<h3>質問（Query）</h3>
+	<h1>就活情報サイト</h1>
+	<h3>検索(Query)</h3>
 	<form action="/JavaApp" method="post">
 		<!-- プルダウンセレクトタブ -->
 		<div class="form-group">
-			<label for="queryOptions">目的語を選択してください</label>
+			<label for="queryOptions">カテゴリを選択してください</label>
 			<select class="form-control" id="queryOptions" name="queryOption" onchange="updateQuery()">
 				<option value="">選択してください</option>
 				<option th:each="option : ${queryOptions}" th:value="${option}" th:text="${option}"></option>
 			</select>
 		</div>
 
-		<!-- テキストエリア -->
+		 テキストエリア
 		<div class="form-group">
 			<textarea class="form-control" id="queryStr" name="queryStr" rows="4" th:text="'?x is-a 選択してください'"></textarea>
 		</div>
