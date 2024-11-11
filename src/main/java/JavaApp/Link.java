@@ -9,8 +9,10 @@ public class Link {
 	Node head;
 	boolean inheritance;
 
+	// コンストラクタ．引数のラベル，テールノード，ヘッドノードを使ってLinkオブジェクトを作成する．
+	// また，引数のSementicNetオブジェクトを使ってノードの管理も行う．
 	public Link(String theLabel, String theTail,
-			String theHead, SemanticNet sn) {
+				String theHead, SemanticNet sn) {
 		label = theLabel;
 		HashMap<String, Node> nodesNameTable = sn.getNodesNameTable();
 		ArrayList<Node> nodes = sn.getNodes();
@@ -31,7 +33,7 @@ public class Link {
 		inheritance = false;
 	}
 
-	// For constructing query.
+	// クエリ生成用のコンストラクタ．ラベル，テールノード，ヘッドノードを使ってLinkオブジェクトを作成する．
 	public Link(String theLabel, String theTail, String theHead) {
 		label = theLabel;
 		tail = new Node(theTail);
@@ -39,26 +41,32 @@ public class Link {
 		inheritance = false;
 	}
 
+	// Linkのinheritance属性をセットする
 	public void setInheritance(boolean value) {
 		inheritance = value;
 	}
 
+	// Linkのテールノードを返す
 	public Node getTail() {
 		return tail;
 	}
 
+	// Linkのヘッドノードを返す
 	public Node getHead() {
 		return head;
 	}
 
+	// Linkのラベルを返す
 	public String getLabel() {
 		return label;
 	}
 
+	// Linkの完全な名称を返す
 	public String getFullName() {
 		return tail.getName() + " " + label + " " + head.getName();
 	}
 
+	// Linkの文字列表現を返す
 	public String toString() {
 		String result = tail.getName() + "  =" + label + "=>  " + head.getName();
 		if (!inheritance) {

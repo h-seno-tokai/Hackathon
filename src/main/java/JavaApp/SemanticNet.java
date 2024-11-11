@@ -12,18 +12,21 @@ import java.util.StringTokenizer;
 
 /***
  * SemanticNetクラス
+ * セマンティックネットワークを管理するクラス。ノードやリンクの追加、クエリ処理を行う。
  */
 public class SemanticNet {
-	
+
     private ArrayList<Node> nodes;  // Nodeのリスト
     private HashMap<String, Node> nodesNameTable;  // Node名で検索できるテーブル
 
+    // コンストラクタ。ノードリストとノード名テーブルを初期化する。
     public SemanticNet() {
         nodes = new ArrayList<>();
         nodesNameTable = new HashMap<>();
     }
 
     //テスト用クエリ要削除
+    // ヘッドノードの一覧を取得する
     public List<String> getHeadNodes() {
         List<String> headNodes = new ArrayList<>();
         List<Link> links = getLinks(); // データベースからリンクを取得
@@ -46,6 +49,7 @@ public class SemanticNet {
         return nodesNameTable;
     }
 
+    // リンクをデータベースに追加し、ノードのリンク情報も更新する
     public void addLink(Link link) {
         try {
             Connection conn = Database.getConnection();
@@ -64,6 +68,7 @@ public class SemanticNet {
         }
     }
 
+    // データベースからリンク情報を取得する
     public List<Link> getLinks() {
         List<Link> links = new ArrayList<>();
         try {
@@ -82,6 +87,7 @@ public class SemanticNet {
         return links;
     }
 
+    // データベースのリンクが空かどうかを確認する
     public boolean isEmpty() {
         try {
             Connection conn = Database.getConnection();
@@ -97,6 +103,7 @@ public class SemanticNet {
         return true;
     }
 
+    // データベースのリンクを全て削除する
     public void DeleteAllLinks() {
         try {
             Connection conn = Database.getConnection();
@@ -107,6 +114,7 @@ public class SemanticNet {
         }
     }
 
+    // 初期リンクを追加する
     public void addInitialLinks() {
         addLink(new Link("is-a", "Fujitsu", "system-integrator", this));
         addLink(new Link("is-a", "NEC", "system-integrator", this));
@@ -126,6 +134,7 @@ public class SemanticNet {
         addLink(new Link("is-a", "GMO Internet", "internet-services", this));
     }
 
+    // クエリを実行し、結果を文字列で返す
     public String query(ArrayList<Link> queries) {
         System.out.println("*** Query ***");
         for (Link q : queries) {
@@ -151,11 +160,18 @@ public class SemanticNet {
 
         StringBuilder sb = new StringBuilder();
         for (Map<String, String> result : results) {
-            sb.append(result.toString()).append("\n");
+            for (String value : result.values()) {
+                sb.append(value).append(",");
+            }
+        }
+        // 最後のカンマを削除
+        if (sb.length() > 0) {
+            sb.setLength(sb.length() - 1);
         }
         return sb.toString();
     }
 
+    // 単一のクエリを実行する
     public List<Map<String, String>> queryLink(Link theQuery) {
         List<Map<String, String>> bindingsList = new ArrayList<>();
         List<Link> links = getLinks();
@@ -168,6 +184,7 @@ public class SemanticNet {
         return bindingsList;
     }
 
+    // 複数のクエリ結果を結合する
     public List<Map<String, String>> join(List<List<Map<String, String>>> bindingsList) {
         int size = bindingsList.size();
         switch (size) {
@@ -186,6 +203,7 @@ public class SemanticNet {
         }
     }
 
+    // 2つのバインディングリストを結合する
     public List<Map<String, String>> joinBindings(List<Map<String, String>> bindings1, List<Map<String, String>> bindings2) {
         List<Map<String, String>> resultBindings = new ArrayList<>();
         for (Map<String, String> b1 : bindings1) {
@@ -199,6 +217,7 @@ public class SemanticNet {
         return resultBindings;
     }
 
+    // 2つのバインディングを結合する
     public Map<String, String> joinBinding(Map<String, String> b1, Map<String, String> b2) {
         Map<String, String> result = new HashMap<>(b1);
         for (String key : b2.keySet()) {
@@ -213,98 +232,21 @@ public class SemanticNet {
         }
         return result;
     }
-    
+
+    // リンクの一覧を表示する
     public void printLinks() {
         System.out.println("*** Links ***");
         List<Link> links = getLinks();
         for (int i = 0; i < links.size(); i++) {
-                System.out.println(((Link) links.get(i)).toString());
+            System.out.println(((Link) links.get(i)).toString());
         }
     }
 
+    // ノードの一覧を表示する
     public void printNodes() {
         System.out.println("*** Nodes ***");
         for (int i = 0; i < nodes.size(); i++) {
-                System.out.println(((Node) nodes.get(i)).toString());
+            System.out.println(((Node) nodes.get(i)).toString());
         }
     }
-}
-
-/**
- * Matcherクラス
- */
-class Matcher {
-    StringTokenizer st1;
-    StringTokenizer st2;
-    Map<String, String> vars;
-
-    Matcher() {
-            vars = new HashMap<String, String>();
-    }
-
-    public boolean matching(String string1, String string2, Map<String, String> bindings) {
-            this.vars = bindings;
-            if (matching(string1, string2)) {
-                    return true;
-            } else {
-                    return false;
-            }
-    }
-
-    public boolean matching(String string1, String string2) {
-            //System.out.println(string1);
-            //System.out.println(string2);
-
-            // 同じなら成功
-            if (string1.equals(string2))
-                    return true;
-
-            // 各々トークンに分ける
-            st1 = new StringTokenizer(string1);
-            st2 = new StringTokenizer(string2);
-
-            // 数が異なったら失敗
-            if (st1.countTokens() != st2.countTokens())
-                    return false;
-
-            // 定数同士
-            for (int i = 0; i < st1.countTokens();) {
-                    if (!tokenMatching(st1.nextToken(), st2.nextToken())) {
-                            // トークンが一つでもマッチングに失敗したら失敗
-                            return false;
-                    }
-            }
-
-            // 最後まで O.K. なら成功
-            return true;
-    }
-
-    boolean tokenMatching(String token1, String token2) {
-        //System.out.println(token1+"<->"+token2);
-        if (token1.equals(token2))
-                return true;
-        if (var(token1) && !var(token2))
-                return varMatching(token1, token2);
-        if (!var(token1) && var(token2))
-                return varMatching(token2, token1);
-        return false;
-	}
-	
-	boolean varMatching(String vartoken, String token) {
-	        if (vars.containsKey(vartoken)) {
-	                if (token.equals(vars.get(vartoken))) {
-	                        return true;
-	                } else {
-	                        return false;
-	                }
-	        } else {
-	                vars.put(vartoken, token);
-	        }
-	        return true;
-	}
-	
-	boolean var(String str1) {
-	        // 先頭が ? なら変数
-	        return str1.startsWith("?");
-	}      
 }

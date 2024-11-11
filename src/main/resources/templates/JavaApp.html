@@ -12,10 +12,10 @@
 	<form action="/JavaApp" method="post">
 		<!-- カテゴリプルダウンセレクトタブ -->
 		<div class="form-group">
-			<label for="queryOptions">カテゴリを選択してくださいを選択してください</label>
-			<select class="form-control" id="queryOptions" name="queryOption">
+			<label for="queryOptions">カテゴリを選択してください</label>
+			<select class="form-control" id="queryOptions" name="queryOption" th:value="${queryOption}">
 				<option value="">選択してください</option>
-				<option th:each="option : ${queryOptions}" th:value="${option}" th:text="${option}"></option>
+				<option th:each="option : ${queryOptions}" th:value="${option}" th:text="${option}" th:selected="${option == queryOption}"></option>
 			</select>
 		</div>
 

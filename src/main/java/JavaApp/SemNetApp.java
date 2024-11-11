@@ -76,6 +76,7 @@ public class SemNetApp {
 
             model.put("sn", sn);
             model.put("queryOptions", sn.getHeadNodes());
+            model.put("queryOption", selectedOption);
 
             if (queryStr != null) {
                 ArrayList<Link> query = strToQuery(queryStr);
