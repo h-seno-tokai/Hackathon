@@ -39,6 +39,7 @@ public class SemNetApp {
             Map<String, Object> model = new HashMap<>();
             String queryStr = ctx.queryParam("queryStr");
             SemanticNet sn = new SemanticNet();
+            sn.DeleteAllLinks();
             if (sn.isEmpty()) {
                 sn.addInitialLinks();
             }
@@ -58,9 +59,17 @@ public class SemNetApp {
 
         app.post("/JavaApp", ctx -> {
             Map<String, Object> model = new HashMap<>();
-            String queryStr = ctx.formParam("queryStr");
-            SemanticNet sn = new SemanticNet();
+            String selectedOption = ctx.formParam("queryOption"); // ユーザーが選択したオプションを取得
+            String queryStr;
 
+            if (selectedOption != null && !selectedOption.isEmpty()) {
+                queryStr = "?x is-a " + selectedOption;  // 選択されたオプションでqueryStrを作成
+            } else {
+                queryStr = "?x is-a 選択されていません";
+            }
+
+            SemanticNet sn = new SemanticNet();
+            sn.DeleteAllLinks();
             if (sn.isEmpty()) {
                 sn.addInitialLinks();
             }

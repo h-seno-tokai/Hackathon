@@ -97,16 +97,33 @@ public class SemanticNet {
         return true;
     }
 
+    public void DeleteAllLinks() {
+        try {
+            Connection conn = Database.getConnection();
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM links");
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void addInitialLinks() {
-        addLink(new Link("is-a", "baseball", "sports", this));
-        addLink(new Link("is-a", "Taro", "NIT-student", this));
-        addLink(new Link("speciality", "Taro", "AI", this));
-        addLink(new Link("is-a", "Ferrari", "car", this));
-        addLink(new Link("has-a", "car", "engine", this));
-        addLink(new Link("hobby", "Taro", "baseball", this));
-        addLink(new Link("own", "Taro", "Ferrari", this));
-        addLink(new Link("is-a", "NIT-student", "student", this));
-        addLink(new Link("donot", "student", "study", this));
+        addLink(new Link("is-a", "Fujitsu", "system-integrator", this));
+        addLink(new Link("is-a", "NEC", "system-integrator", this));
+        addLink(new Link("is-a", "NTT Data", "system-integrator", this));
+        addLink(new Link("is-a", "Rakuten", "e-commerce", this));
+        addLink(new Link("is-a", "Mercari", "e-commerce", this));
+        addLink(new Link("is-a", "Yahoo Japan", "internet-services", this));
+        addLink(new Link("is-a", "LINE", "social-networking", this));
+        addLink(new Link("is-a", "SoftBank", "telecommunications", this));
+        addLink(new Link("is-a", "NTT Communications", "telecommunications", this));
+        addLink(new Link("is-a", "KDDI", "telecommunications", this));
+        addLink(new Link("is-a", "Sony", "electronics", this));
+        addLink(new Link("is-a", "Panasonic", "electronics", this));
+        addLink(new Link("is-a", "Canon", "electronics", this));
+        addLink(new Link("is-a", "Trend Micro", "cybersecurity", this));
+        addLink(new Link("is-a", "CyberAgent", "digital-marketing", this));
+        addLink(new Link("is-a", "GMO Internet", "internet-services", this));
     }
 
     public String query(ArrayList<Link> queries) {
