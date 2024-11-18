@@ -164,8 +164,7 @@ public class SemanticNet {
     }
 
     // クエリを実行し、結果を文字列で返す
-    public List<Map<String, String>> query(ArrayList<Link> queries) {
-        ArrayList<Company> results = new ArrayList<>();
+    public String query(ArrayList<Link> queries) {
         System.out.println("*** Query ***");
         for (Link q : queries) {
             System.out.println(q.toString());
@@ -187,15 +186,17 @@ public class SemanticNet {
         if (results.isEmpty()) {
             return null;
         }
-
+        StringBuilder sb = new StringBuilder();
         for (Map<String, String> result : results) {
             for (String value : result.values()) {
-                //　社名とそのURLを含むCompanyオブジェクトを返す
-                Company company = new Company(value, "https://www." + value + ".com");
-                results.add((Map<String, String>) company);
+                sb.append(value).append(",");
             }
         }
-        return results;
+        // 最後のカンマを削除
+        if (sb.length() > 0) {
+            sb.setLength(sb.length() - 1);
+        }
+        return sb.toString();
     }
 
     // 単一のクエリを実行する

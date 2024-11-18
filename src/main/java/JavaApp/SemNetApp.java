@@ -88,7 +88,7 @@ public class SemNetApp {
 
             if (queryStr != null) {
                 ArrayList<Link> query = strToQuery(queryStr);
-                Company result = (Company) sn.query(query);
+                String result = sn.query(query);
                 model.put("result", result);
             }
             model.put("query", queryStr);
