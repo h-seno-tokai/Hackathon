@@ -24,8 +24,20 @@ public class SemanticNet {
         nodes = new ArrayList<>();
         nodesNameTable = new HashMap<>();
     }
+    //企業のURLを取得．企業名を引数に受け取り，ラベルノードがURLのリンクの対応するヘッドノードを返す
+    public String getURL(String company) {
+        for (Node node : nodes) {
+            ArrayList<Link> arriveAtMeLinks = node.getArriveAtMeLinks();
+            for (Link link : arriveAtMeLinks) {
+                if ("URL".equals(link.getLabel()) && company.equals(link.getTail().getName())) {
+                    return link.getHead().getName();
+                }
+            }
+        }
+        return null;
+    }
 
-    //カテゴリを取得．二番目がis-aリンクのテールノードのリストを返す
+    //カテゴリを取得．ラベルがis-aリンクのテールノードのリストを返す
     public ArrayList<String> getcategory() {
         HashSet<String> categorySet = new HashSet<>();
         for (Node node : nodes) {
@@ -161,10 +173,26 @@ public class SemanticNet {
         addLink(new Link("locate", "Trend Micro", "Tokyo", this));
         addLink(new Link("locate", "CyberAgent", "Tokyo", this));
         addLink(new Link("locate", "GMO Internet", "Tokyo", this));
+        addLink(new Link("URL", "Fujitsu", "https://www.fujitsu.com/", this));
+        addLink(new Link("URL", "NEC", "https://www.nec.com/", this));
+        addLink(new Link("URL", "NTT Data", "https://www.nttdata.com/", this));
+        addLink(new Link("URL", "Rakuten", "https://www.rakuten.com/", this));
+        addLink(new Link("URL", "Mercari", "https://www.mercari.com/", this));
+        addLink(new Link("URL", "Yahoo Japan", "https://www.yahoo.co.jp/", this));
+        addLink(new Link("URL", "LINE", "https://line.me/", this));
+        addLink(new Link("URL", "SoftBank", "https://www.softbank.jp/", this));
+        addLink(new Link("URL", "NTT Communications", "https://www.ntt.com/", this));
+        addLink(new Link("URL", "KDDI", "https://www.kddi.com/", this));
+        addLink(new Link("URL", "Sony", "https://www.sony.com/", this));
+        addLink(new Link("URL", "Panasonic", "https://www.panasonic.com/", this));
+        addLink(new Link("URL", "Canon", "https://global.canon/", this));
+        addLink(new Link("URL", "Trend Micro", "https://www.trendmicro.com/", this));
+        addLink(new Link("URL", "CyberAgent", "https://www.cyberagent.co.jp/", this));
+        addLink(new Link("URL", "GMO Internet", "https://www.gmo.jp/", this));
     }
 
     // クエリを実行し、結果を文字列で返す
-    public String query(ArrayList<Link> queries) {
+    public ArrayList<String> query(ArrayList<Link> queries) {
         System.out.println("*** Query ***");
         for (Link q : queries) {
             System.out.println(q.toString());
@@ -186,17 +214,16 @@ public class SemanticNet {
         if (results.isEmpty()) {
             return null;
         }
-        StringBuilder sb = new StringBuilder();
+        //クエリの検索結果を基に？xに当てはまる企業名のリストを作成する
+        ArrayList<String> companyList = new ArrayList<>();
         for (Map<String, String> result : results) {
-            for (String value : result.values()) {
-                sb.append(value).append(",");
-            }
+            companyList.add(result.get("?x"));
         }
-        // 最後のカンマを削除
-        if (sb.length() > 0) {
-            sb.setLength(sb.length() - 1);
+        //企業名を全て表示
+        for (String company : companyList) {
+            System.out.println(company);
         }
-        return sb.toString();
+        return companyList;
     }
 
     // 単一のクエリを実行する

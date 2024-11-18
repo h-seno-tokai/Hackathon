@@ -50,7 +50,12 @@ public class SemNetApp {
             model.put("locationOptions", sn.getlocation());
             if (queryStr != null) {
                 ArrayList<Link> query = strToQuery(queryStr);
-                String result = sn.query(query);
+                ArrayList<String> CompanyList = sn.query(query);
+                //カンパニーリストにある会社の名前からgetURLメソッドを用いて，会社名とURLの情報を保持するCompanyオブジェクトを作成しそのリストを結果としてプットする
+                ArrayList<Company> result = new ArrayList<>();
+                for (String company : CompanyList) {
+                    result.add(new Company(company, sn.getURL(company)));
+                }
                 model.put("result", result);
             } else {
                 queryStr = "?x is-a ?y\n?y donot ?z";
@@ -88,7 +93,12 @@ public class SemNetApp {
 
             if (queryStr != null) {
                 ArrayList<Link> query = strToQuery(queryStr);
-                String result = sn.query(query);
+                ArrayList<String> CompanyList = sn.query(query);
+                //カンパニーリストにある会社の名前からgetURLメソッドを用いて，会社名とURLの情報を保持するCompanyオブジェクトを作成しそのリストを結果としてプットする
+                ArrayList<Company> result = new ArrayList<>();
+                for (String company : CompanyList) {
+                    result.add(new Company(company, sn.getURL(company)));
+                }
                 model.put("result", result);
             }
             model.put("query", queryStr);

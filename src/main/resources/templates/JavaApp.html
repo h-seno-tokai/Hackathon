@@ -34,7 +34,9 @@
 	</form>
 
 	<h3>結果：</h3>
-	<p th:text="${result}"></p>
+	<div th:each="company : ${result}">
+		<a th:href="${company.url}" th:text="${company.name}"></a><br>
+	</div>
 </div>
 </body>
 </html>
