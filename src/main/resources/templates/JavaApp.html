@@ -12,10 +12,19 @@
 	<form action="/JavaApp" method="post">
 		<!-- カテゴリプルダウンセレクトタブ -->
 		<div class="form-group">
-			<label for="queryOptions">カテゴリを選択してください</label>
-			<select class="form-control" id="queryOptions" name="queryOption" th:value="${queryOption}">
+			<label for="categoryOptions">カテゴリを選択してください</label>
+			<select class="form-control" id="categoryOptions" name="categoryOption" th:value="${queryOption}">
 				<option value="">選択してください</option>
-				<option th:each="option : ${queryOptions}" th:value="${option}" th:text="${option}" th:selected="${option == queryOption}"></option>
+				<option th:each="option : ${categoryOptions}" th:value="${option}" th:text="${option}" th:selected="${option == categoryOption}"></option>
+			</select>
+		</div>
+
+		<!-- 予定勤務地プルダウンセレクトタブ -->
+		<div class="form-group">
+			<label for="locationOptions">予定勤務地を選択してください</label>
+			<select class="form-control" id="locationOptions" name="locationOption" th:value="${locationOption}">
+				<option value="">選択してください</option>
+				<option th:each="location : ${locationOptions}" th:value="${location}" th:text="${location}" th:selected="${location == locationOption}"></option>
 			</select>
 		</div>
 
@@ -25,7 +34,9 @@
 	</form>
 
 	<h3>結果：</h3>
-	<p th:text="${result}"></p>
+	<div th:each="company : ${resultList}">
+		<a th:href="${company.url}" th:text="${company.name}"></a><br>
+	</div>
 </div>
 </body>
 </html>

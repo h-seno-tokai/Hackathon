@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.HashSet;
 
 /***
  * SemanticNetクラス
@@ -25,19 +25,32 @@ public class SemanticNet {
         nodesNameTable = new HashMap<>();
     }
 
-    //テスト用クエリ要削除
-    // ヘッドノードの一覧を取得する
-    public List<String> getHeadNodes() {
-        List<String> headNodes = new ArrayList<>();
-        List<Link> links = getLinks(); // データベースからリンクを取得
-
-        for (Link link : links) {
-            String headNodeName = link.getHead().getName();
-            if (!headNodes.contains(headNodeName)) { // 重複を避ける
-                headNodes.add(headNodeName);
+    //カテゴリを取得．二番目がis-aリンクのテールノードのリストを返す
+    public ArrayList<String> getcategory() {
+        HashSet<String> categorySet = new HashSet<>();
+        for (Node node : nodes) {
+            ArrayList<Link> arriveAtMeLinks = node.getArriveAtMeLinks();
+            for (Link link : arriveAtMeLinks) {
+                if ("is-a".equals(link.getLabel())) {
+                    categorySet.add(link.getHead().getName());
+                }
             }
         }
-        return headNodes;
+        return new ArrayList<>(categorySet);
+    }
+
+    //所在地を取得．
+    public ArrayList<String> getlocation() {
+        HashSet<String> locationSet = new HashSet<>();
+        for (Node node : nodes) {
+            ArrayList<Link> arriveAtMeLinks = node.getArriveAtMeLinks();
+            for (Link link : arriveAtMeLinks) {
+                if ("locate".equals(link.getLabel())) {
+                    locationSet.add(link.getHead().getName());
+                }
+            }
+        }
+        return new ArrayList<>(locationSet);
     }
 
     // ノードリストとノード名テーブルを返すためのメソッド
@@ -132,10 +145,27 @@ public class SemanticNet {
         addLink(new Link("is-a", "Trend Micro", "cybersecurity", this));
         addLink(new Link("is-a", "CyberAgent", "digital-marketing", this));
         addLink(new Link("is-a", "GMO Internet", "internet-services", this));
+        addLink(new Link("locate", "Fujitsu", "Tokyo", this));
+        addLink(new Link("locate", "NEC", "Tokyo", this));
+        addLink(new Link("locate", "NTT Data", "Tokyo", this));
+        addLink(new Link("locate", "Rakuten", "Tokyo", this));
+        addLink(new Link("locate", "Mercari", "Tokyo", this));
+        addLink(new Link("locate", "Yahoo Japan", "Tokyo", this));
+        addLink(new Link("locate", "LINE", "Tokyo", this));
+        addLink(new Link("locate", "SoftBank", "Tokyo", this));
+        addLink(new Link("locate", "NTT Communications", "Tokyo", this));
+        addLink(new Link("locate", "KDDI", "Tokyo", this));
+        addLink(new Link("locate", "Sony", "Tokyo", this));
+        addLink(new Link("locate", "Panasonic", "Osaka", this));
+        addLink(new Link("locate", "Canon", "Tokyo", this));
+        addLink(new Link("locate", "Trend Micro", "Tokyo", this));
+        addLink(new Link("locate", "CyberAgent", "Tokyo", this));
+        addLink(new Link("locate", "GMO Internet", "Tokyo", this));
     }
 
     // クエリを実行し、結果を文字列で返す
-    public String query(ArrayList<Link> queries) {
+    public List<Map<String, String>> query(ArrayList<Link> queries) {
+        ArrayList<Company> results = new ArrayList<>();
         System.out.println("*** Query ***");
         for (Link q : queries) {
             System.out.println(q.toString());
@@ -146,7 +176,7 @@ public class SemanticNet {
             List<Map<String, String>> bindings = queryLink(query);
             if (bindings.isEmpty()) {
                 // クエリが失敗した場合
-                return "クエリ結果がありません";
+                return null;
             } else {
                 bindingsList.add(bindings);
             }
@@ -155,20 +185,17 @@ public class SemanticNet {
         List<Map<String, String>> results = join(bindingsList);
 
         if (results.isEmpty()) {
-            return "クエリ結果がありません";
+            return null;
         }
 
-        StringBuilder sb = new StringBuilder();
         for (Map<String, String> result : results) {
             for (String value : result.values()) {
-                sb.append(value).append(",");
+                //　社名とそのURLを含むCompanyオブジェクトを返す
+                Company company = new Company(value, "https://www." + value + ".com");
+                results.add((Map<String, String>) company);
             }
         }
-        // 最後のカンマを削除
-        if (sb.length() > 0) {
-            sb.setLength(sb.length() - 1);
-        }
-        return sb.toString();
+        return results;
     }
 
     // 単一のクエリを実行する

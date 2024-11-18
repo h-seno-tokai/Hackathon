@@ -45,7 +45,9 @@ public class SemNetApp {
             }
 
             model.put("sn", sn);
-            model.put("queryOptions", sn.getHeadNodes());
+            //カテゴリと所在地の選択肢を取得して送信
+            model.put("categoryOptions", sn.getcategory());
+            model.put("locationOptions", sn.getlocation());
             if (queryStr != null) {
                 ArrayList<Link> query = strToQuery(queryStr);
                 String result = sn.query(query);
@@ -53,19 +55,23 @@ public class SemNetApp {
             } else {
                 queryStr = "?x is-a ?y\n?y donot ?z";
             }
+            //クエリを送信
             model.put("query", queryStr);
             ctx.render("/JavaApp.html", model);
         });
 
         app.post("/JavaApp", ctx -> {
             Map<String, Object> model = new HashMap<>();
-            String selectedOption = ctx.formParam("queryOption"); // ユーザーが選択したオプションを取得
-            String queryStr;
+            String selectedOption = ctx.formParam("categoryOption");// ユーザーが選択したオプションを取得
+            String locationOption = ctx.formParam("locationOption");// ユーザーが選択したオプションを取得
+            String queryStr = "";
 
             if (selectedOption != null && !selectedOption.isEmpty()) {
                 queryStr = "?x is-a " + selectedOption;  // 選択されたオプションでqueryStrを作成
-            } else {
-                queryStr = "?x is-a 選択されていません";
+            }
+
+            if (locationOption != null && !locationOption.isEmpty()) {
+                queryStr = queryStr + "\n" + "?x locate " + locationOption;  // 選択されたオプションでqueryStrを作成
             }
 
             SemanticNet sn = new SemanticNet();
@@ -75,12 +81,14 @@ public class SemNetApp {
             }
 
             model.put("sn", sn);
-            model.put("queryOptions", sn.getHeadNodes());
-            model.put("queryOption", selectedOption);
+            model.put("categoryOptions", sn.getcategory());
+            model.put("locationOptions", sn.getlocation());
+            model.put("categoryOption", selectedOption);
+            model.put("locationOption", locationOption);
 
             if (queryStr != null) {
                 ArrayList<Link> query = strToQuery(queryStr);
-                String result = sn.query(query);
+                Company result = (Company) sn.query(query);
                 model.put("result", result);
             }
             model.put("query", queryStr);
