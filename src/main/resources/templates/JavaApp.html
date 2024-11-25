@@ -34,8 +34,9 @@
 	</form>
 
 	<h3>結果：</h3>
-	<div th:each="company : ${result}">
-		<a th:href="${company.url}" th:text="${company.name}"></a><br>
+	<div th:each="company : ${result}" style="margin-bottom: 20px;">
+		<a th:href="${company.url}" th:text="${company.name}" style="font-weight: bold;"></a><br>
+		<p th:text="${company.supplement}" style="margin-left: 20px;"></p>
 	</div>
 </div>
 </body>

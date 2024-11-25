@@ -51,10 +51,10 @@ public class SemNetApp {
             if (queryStr != null) {
                 ArrayList<Link> query = strToQuery(queryStr);
                 ArrayList<String> CompanyList = sn.query(query);
-                //カンパニーリストにある会社の名前からgetURLメソッドを用いて，会社名とURLの情報を保持するCompanyオブジェクトを作成しそのリストを結果としてプットする
+                //カンパニーリストにある会社の名前からgetURLメソッドを用いて，会社名とURL，会社補足情報の情報を保持するCompanyオブジェクトを作成しそのリストを結果としてプットする
                 ArrayList<Company> result = new ArrayList<>();
                 for (String company : CompanyList) {
-                    result.add(new Company(company, sn.getURL(company)));
+                    result.add(new Company(company, sn.getURL(company), sn.getSupplement(company)));
                 }
                 model.put("result", result);
             } else {
@@ -94,10 +94,17 @@ public class SemNetApp {
             if (queryStr != null) {
                 ArrayList<Link> query = strToQuery(queryStr);
                 ArrayList<String> CompanyList = sn.query(query);
-                //カンパニーリストにある会社の名前からgetURLメソッドを用いて，会社名とURLの情報を保持するCompanyオブジェクトを作成しそのリストを結果としてプットする
+                //カンパニーリストにある会社の名前からgetURLメソッドを用いて，会社名とURL，会社補足情報の情報を保持するCompanyオブジェクトを作成しそのリストを結果としてプットする
                 ArrayList<Company> result = new ArrayList<>();
-                for (String company : CompanyList) {
-                    result.add(new Company(company, sn.getURL(company)));
+                //結果がない場合は結果なしと表示
+                if(!(CompanyList ==null)){
+                    for (String company : CompanyList) {
+                        result.add(new Company(company, sn.getURL(company), sn.getSupplement(company)));
+                        //会社概要をターミナルに表示
+                        System.out.println(sn.getSupplement(company));
+                    }
+                }else{
+                    result.add(new Company("結果なし", "http://localhost:7000/JavaApp", "結果なし"));
                 }
                 model.put("result", result);
             }
