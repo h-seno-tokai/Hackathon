@@ -24,6 +24,19 @@ public class SemanticNet {
         nodes = new ArrayList<>();
         nodesNameTable = new HashMap<>();
     }
+    //企業の画像のpathを返すメソッド
+    public String getPicturePath(String company) {
+        for (Node node : nodes) {
+            ArrayList<Link> arriveAtMeLinks = node.getArriveAtMeLinks();
+            for (Link link : arriveAtMeLinks) {
+                if ("picturePath".equals(link.getLabel()) && company.equals(link.getTail().getName())) {
+                    return link.getHead().getName();
+                }
+            }
+        }
+        return null;
+    }
+
     //企業のURLを取得．企業名を引数に受け取り，ラベルノードがURLのリンクの対応するヘッドノードを返す
     public String getURL(String company) {
         for (Node node : nodes) {
@@ -217,6 +230,24 @@ public class SemanticNet {
         addLink(new Link("suppplement", "Trend-Micro", "トレンドマイクロ株式会社（Trend Micro Incorporated）は、東京都渋谷区に本社を置く日本のITセキュリティ企業。ウイルス対策ソフトウェアやセキュリティソリューションを提供。", this));
         addLink(new Link("suppplement", "CyberAgent", "株式会社サイバーエージェント（CyberAgent, Inc.）は、東京都渋谷区に本社を置く日本のIT企業。広告事業、ゲーム、メディア運営を中心に事業を展開。", this));
         addLink(new Link("suppplement", "GMO-Internet", "GMOインターネット株式会社（GMO Internet Group, Inc.）は、東京都渋谷区に本社を置く日本のIT企業。ドメイン登録、ホスティング、インターネット広告事業を展開。", this));
+        addLink(new Link("picturePath", "Fujitsu", "/Fujitsu.jpg", this));
+        addLink(new Link("picturePath", "NEC", "/NEC.jpg", this));
+        addLink(new Link("picturePath", "NTT-Data", "/NTT-Data.jpg", this));
+        addLink(new Link("picturePath", "Rakuten", "/Rakuten.jpg", this));
+        addLink(new Link("picturePath", "Mercari", "/Mercari.jpg", this));
+        addLink(new Link("picturePath", "Yahoo-Japan", "/Yahoo-Japan.jpg", this));
+        addLink(new Link("picturePath", "LINE", "/LINE.jpg", this));
+        addLink(new Link("picturePath", "SoftBank", "/SoftBank.jpg", this));
+        addLink(new Link("picturePath", "NTT-Communications", "/NTT-Communications.jpg", this));
+        addLink(new Link("picturePath", "KDDI", "/KDDI.jpg", this));
+        addLink(new Link("picturePath", "Sony", "/Sony.jpg", this));
+        addLink(new Link("picturePath", "Panasonic", "/Panasonic.jpg", this));
+        addLink(new Link("picturePath", "Canon", "/Canon.jpg", this));
+        addLink(new Link("picturePath", "Trend-Micro", "/Trend-Micro.jpg", this));
+        addLink(new Link("picturePath", "CyberAgent", "/CyberAgent.jpg", this));
+        addLink(new Link("picturePath", "GMO-Internet", "/GMO-Internet.jpg", this));
+
+
     }
 
     // クエリを実行し、結果を文字列で返す

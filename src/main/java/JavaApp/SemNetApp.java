@@ -10,6 +10,7 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import io.javalin.Javalin;
 import io.javalin.rendering.JavalinRenderer;
 import io.javalin.rendering.template.JavalinThymeleaf;
+import io.javalin.http.staticfiles.Location; // Locationクラスのインポートを追加
 
 /**
  * SemNetAppクラス
@@ -32,8 +33,11 @@ public class SemNetApp {
         // JavalinにThymeleafを登録
         JavalinRenderer.register(new JavalinThymeleaf(templateEngine), ".html");
 
-        // Javalinアプリの作成
-        Javalin app = Javalin.create().start(7000);
+        // Javalinアプリの作成と静的ファイルの設定
+        Javalin app = Javalin.create(config -> {
+            config.staticFiles.add("/templates/Album", Location.CLASSPATH); // 静的ファイルの設定
+        }).start(7000);
+
 
         app.get("/JavaApp", ctx -> {
             Map<String, Object> model = new HashMap<>();
@@ -54,7 +58,7 @@ public class SemNetApp {
                 //カンパニーリストにある会社の名前からgetURLメソッドを用いて，会社名とURL，会社補足情報の情報を保持するCompanyオブジェクトを作成しそのリストを結果としてプットする
                 ArrayList<Company> result = new ArrayList<>();
                 for (String company : CompanyList) {
-                    result.add(new Company(company, sn.getURL(company), sn.getSupplement(company)));
+                    result.add(new Company(company, sn.getURL(company), sn.getSupplement(company),sn.getPicturePath(company)));
                 }
                 model.put("result", result);
             } else {
@@ -99,12 +103,15 @@ public class SemNetApp {
                 //結果がない場合は結果なしと表示
                 if(!(CompanyList ==null)){
                     for (String company : CompanyList) {
-                        result.add(new Company(company, sn.getURL(company), sn.getSupplement(company)));
+                        result.add(new Company(company, sn.getURL(company), sn.getSupplement(company),sn.getPicturePath(company)));
                         //会社概要をターミナルに表示
                         System.out.println(sn.getSupplement(company));
+
+                        //写真パスを表示
+                        System.out.println(sn.getPicturePath(company));
                     }
                 }else{
-                    result.add(new Company("結果なし", "http://localhost:7000/JavaApp", "結果なし"));
+                    result.add(new Company("結果なし", "http://localhost:7000/JavaApp", "結果なし", ""));
                 }
                 model.put("result", result);
             }
