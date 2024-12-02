@@ -243,20 +243,17 @@
 	</form>
 
 	<h3>結果：</h3>
-	<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-		<div class="col">
-			<div th:each="company : ${result}" style="margin-bottom: 20px;">
-				<div class="card shadow-sm">
-					<img th:src="${company.picturePath}" class="bd-placeholder-img card-img-top" width="100%"
-						 height="225" alt="Placeholder image">
-					<div class="card-body">
-						<p class="card-text" th:text="${company.supplement}" style="margin-left: 20px;"> </p>
-						<div class="d-flex justify-content-between align-items-center">
-							<div class="btn-group">
-								<a th:href="${company.url}">
-									<button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-								</a>
-							</div>
+	<div class="row g-3">
+		<div class="col-12 d-flex flex-wrap">
+			<div th:each="company : ${result}" class="card shadow-sm me-3 mb-3" style="width: 18rem;">
+				<img th:src="${company.picturePath}" class="bd-placeholder-img card-img-top" width="100%" height="225" alt="Placeholder image">
+				<div class="card-body">
+					<p class="card-text" th:text="${company.supplement}" style="margin-left: 20px;"> </p>
+					<div class="d-flex justify-content-between align-items-center">
+						<div class="btn-group">
+							<a th:href="${company.url}">
+								<button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+							</a>
 						</div>
 					</div>
 				</div>

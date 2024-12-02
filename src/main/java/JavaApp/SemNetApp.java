@@ -68,6 +68,15 @@ public class SemNetApp {
             model.put("query", queryStr);
             ctx.render("/JavaApp.html", model);
         });
+        app.get("/JavaApp/Ikkyu", ctx -> {
+            Map<String, Object> model = new HashMap<>();
+            ctx.render("/hyperlink.html");
+        });
+        //一休さん専用の紹介ページを使う
+        app.post("/JavaApp/Ikkyu", ctx -> {
+            Map<String, Object> model = new HashMap<>();
+            ctx.render("/hyperlink.html");
+        });
 
         app.post("/JavaApp", ctx -> {
             Map<String, Object> model = new HashMap<>();
