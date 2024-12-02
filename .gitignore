@@ -32,9 +32,6 @@ build/
 !**/src/test/**/build/
 
 ### VS Code ###
-.vscode/
-*.png
-*.jpg
 
 ### Mac OS ###
 .DS_Store

@@ -1,0 +1,5 @@
+target/
+data/
+*.log
+target/
+!target/SemNetApp-1.0-SNAPSHOT.jar
