@@ -26,11 +26,6 @@ public class AppRouter {
             model.put("locationOptions", sn.getlocation());
             model.put("salaryOptions", sn.getAverageSalary());
             model.put("employeeOptions", sn.getEmployeeCount());
-            // 選択肢をすべて表示
-            System.out.println(sn.getcategory());
-            System.out.println(sn.getlocation());
-            System.out.println(sn.getAverageSalary());
-            System.out.println(sn.getEmployeeCount());
 
 
             if (queryStr != null) {
@@ -97,11 +92,6 @@ public class AppRouter {
 
             model.put("result", result);
             model.put("query", queryStr);
-            // 選択肢をすべて表示
-            System.out.println(sn.getcategory());
-            System.out.println(sn.getlocation());
-            System.out.println(sn.getAverageSalary());
-            System.out.println(sn.getEmployeeCount());
 
             ctx.render("/JavaApp.html", model);
         });
