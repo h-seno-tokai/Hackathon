@@ -93,14 +93,15 @@
         }
 
         main img {
-            max-width: 900px;
-            height: auto;
+            max-width: 100%; /* 親要素の幅に基づいて画像の幅を調整 */
+            height: auto;   /* アスペクト比を維持 */
             display: block;
             margin: 15px auto;
         }
 
-        .image-container {
-            border-radius: 8px;
+        .image-container, .image-container2 {
+            max-width: 100%; /* 親要素の幅に合わせる */
+            height: auto;    /* アスペクト比を維持 */
         }
 
         .intro {
