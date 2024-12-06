@@ -59,6 +59,7 @@ public class AppRouter {
             String queryStr = "";
 
 
+
             if (selectedOption != null && !selectedOption.isEmpty()) {
                 queryStr = "?x is-a " + selectedOption;
             }
