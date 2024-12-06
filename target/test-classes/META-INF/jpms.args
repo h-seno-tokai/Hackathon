@@ -1,0 +1,4 @@
+--patch-module
+SemNetApp=_
+--add-reads
+SemNetApp=ALL-UNNAMED
