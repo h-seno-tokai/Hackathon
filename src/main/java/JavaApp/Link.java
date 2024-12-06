@@ -11,26 +11,27 @@ public class Link {
 
 	// コンストラクタ．引数のラベル，テールノード，ヘッドノードを使ってLinkオブジェクトを作成する．
 	// また，引数のSementicNetオブジェクトを使ってノードの管理も行う．
-	public Link(String theLabel, String theTail,
-				String theHead, SemanticNet sn) {
+	public Link(String theLabel, String theTail, String theHead, SemanticNet sn) {
 		label = theLabel;
 		HashMap<String, Node> nodesNameTable = sn.getNodesNameTable();
 		ArrayList<Node> nodes = sn.getNodes();
 
-		tail = (Node) nodesNameTable.get(theTail);
+		tail = nodesNameTable.get(theTail);
 		if (tail == null) {
 			tail = new Node(theTail);
 			nodes.add(tail);
 			nodesNameTable.put(theTail, tail);
 		}
 
-		head = (Node) nodesNameTable.get(theHead);
+		head = nodesNameTable.get(theHead);
 		if (head == null) {
 			head = new Node(theHead);
 			nodes.add(head);
 			nodesNameTable.put(theHead, head);
 		}
-		inheritance = false;
+
+		// is-aリンクであればinheritanceをtrueにする
+		inheritance = "is-a".equals(theLabel);
 	}
 
 	// クエリ生成用のコンストラクタ．ラベル，テールノード，ヘッドノードを使ってLinkオブジェクトを作成する．

@@ -1,9 +1,6 @@
 package JavaApp;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -60,7 +57,7 @@ public class SemanticNet {
     }
 
     public ArrayList<String> getcategory() {
-        return getAttributeList("is-a");
+        return getAttributeList("category");
     }
 
     public ArrayList<String> getAverageSalary() {
@@ -292,13 +289,74 @@ public class SemanticNet {
     public List<Map<String, String>> queryLink(Link theQuery) {
         List<Map<String, String>> bindingsList = new ArrayList<>();
         List<Link> links = getLinks();
+        Matcher matcher = new Matcher(this); // SemanticNetの参照を渡す
+
+        // まずは直接マッチするリンクを探す
         for (Link link : links) {
             Map<String, String> bindings = new HashMap<>();
-            if (new Matcher().matching(theQuery.getFullName(), link.getFullName(), bindings)) {
+            if (matcher.matching(theQuery.getFullName(), link.getFullName(), bindings)) {
                 bindingsList.add(bindings);
             }
         }
+
+        // 直接マッチがない場合はis-a継承を試す
+        if (bindingsList.isEmpty()) {
+            bindingsList = queryWithInheritance(theQuery);
+        }
+
         return bindingsList;
+    }
+
+    // is-aリンクによる継承を利用して再クエリする
+    private List<Map<String, String>> queryWithInheritance(Link theQuery) {
+        List<Map<String, String>> bindingsList = new ArrayList<>();
+        Matcher m = new Matcher(this);
+
+        String queryTail = theQuery.getTail().getName();
+
+        // テールが変数なら全ノードを対象に、定数ならそのノードのみ対象にする
+        for (Node node : nodes) {
+            if (queryTail.startsWith("?") || node.getName().equals(queryTail)) {
+                // node から is-a を辿って継承されるリンクを取得
+                List<Link> inheritedLinks = getInheritedLinks(node);
+                for (Link inheritedLink : inheritedLinks) {
+                    Map<String, String> bindings = new HashMap<>();
+                    if (m.matching(theQuery.getFullName(), inheritedLink.getFullName(), bindings)) {
+                        bindingsList.add(bindings);
+                    }
+                }
+            }
+        }
+
+        return bindingsList;
+    }
+
+    // ノードからis-aを辿り、上位ノードのリンクを継承する
+    private List<Link> getInheritedLinks(Node node) {
+        List<Link> inheritedLinks = new ArrayList<>();
+        Set<Node> visited = new HashSet<>();
+        gatherInheritedLinks(node, inheritedLinks, visited);
+        return inheritedLinks;
+    }
+
+    private void gatherInheritedLinks(Node node, List<Link> result, Set<Node> visited) {
+        if (visited.contains(node)) {
+            return;
+        }
+        visited.add(node);
+
+        // 自ノードの出発リンクのうち、is-a以外の属性リンクを追加
+        for (Link l : node.getDepartFromMeLinks()) {
+            if (!"is-a".equals(l.getLabel())) {
+                result.add(l);
+            }
+        }
+
+        // 親ノード(is-aで指し示される上位概念)にも同様の処理を再帰的に適用
+        ArrayList<Node> parents = node.getISATails();
+        for (Node parent : parents) {
+            gatherInheritedLinks(parent, result, visited);
+        }
     }
 
     // 複数のクエリ結果を結合する
@@ -350,5 +408,26 @@ public class SemanticNet {
         return result;
     }
 
+    public boolean isA(String child, String parent) {
+        if (child.equals(parent)) return true; // 同じならtrue
+        Node childNode = nodesNameTable.get(child);
+        if (childNode == null) return false;
+
+        Set<Node> visited = new HashSet<>();
+        return isARecursive(childNode, parent, visited);
+    }
+
+    private boolean isARecursive(Node node, String parent, Set<Node> visited) {
+        if (node.getName().equals(parent)) return true;
+        if (!visited.add(node)) return false; // ループ防止
+
+        // 親概念をたどる
+        for (Node p : node.getISATails()) {
+            if (isARecursive(p, parent, visited)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

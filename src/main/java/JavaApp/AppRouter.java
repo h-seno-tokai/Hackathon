@@ -61,7 +61,7 @@ public class AppRouter {
 
 
             if (selectedOption != null && !selectedOption.isEmpty()) {
-                queryStr = "?x is-a " + selectedOption;
+                queryStr = "?x category " + selectedOption;
             }
             if (locationOption != null && !locationOption.isEmpty()) {
                 queryStr += "\n?x locate " + locationOption;
