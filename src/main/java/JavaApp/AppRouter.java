@@ -23,9 +23,11 @@ public class AppRouter {
 
             model.put("sn", sn);
             model.put("categoryOptions", sn.getcategory());
+
             model.put("locationOptions", sn.getlocation());
             model.put("salaryOptions", sn.getAverageSalary());
             model.put("employeeOptions", sn.getEmployeeCount());
+            System.out.println("employeeOptions: " + sn.getEmployeeCount());
 
 
             if (queryStr != null) {
@@ -38,7 +40,7 @@ public class AppRouter {
                 }
                 model.put("result", result);
             } else {
-                queryStr = "?x is-a ?y\n?y donot ?z";
+                queryStr = "?x category ?y\n?y donot ?z";
             }
 
             model.put("query", queryStr);
@@ -59,7 +61,7 @@ public class AppRouter {
             String queryStr = "";
 
             if (selectedOption != null && !selectedOption.isEmpty()) {
-                queryStr = "?x is-a " + selectedOption;
+                queryStr = "?x category " + selectedOption;
             }
             if (locationOption != null && !locationOption.isEmpty()) {
                 queryStr += "\n?x locate " + locationOption;
