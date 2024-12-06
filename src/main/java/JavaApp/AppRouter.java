@@ -51,6 +51,11 @@ public class AppRouter {
             String locationOption = ctx.formParam("locationOption");
             String salaryOption = ctx.formParam("salaryOption");
             String employeeOption = ctx.formParam("employeeOption");
+            //取得した選択肢をウェブに送り返す．
+            model.put("categoryOption", selectedOption);
+            model.put("locationOption", locationOption);
+            model.put("salaryOption", salaryOption);
+            model.put("employeeOption", employeeOption);
             String queryStr = "";
 
             if (selectedOption != null && !selectedOption.isEmpty()) {
