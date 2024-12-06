@@ -58,6 +58,7 @@ public class AppRouter {
             model.put("employeeOption", employeeOption);
             String queryStr = "";
 
+
             if (selectedOption != null && !selectedOption.isEmpty()) {
                 queryStr = "?x is-a " + selectedOption;
             }
