@@ -13,6 +13,7 @@
         </repository>
     </repositories>
 
+
     <dependencies>
 
         <!-- Javalin -->
@@ -65,6 +66,11 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>java -jar target/SemNetApp-1.0-SNAPSHOT.jar
+            </resource>
+        </resources>
         <plugins>
             <!-- コンパイラプラグイン -->
             <plugin>
@@ -107,5 +113,6 @@
             </plugin>
         </plugins>
     </build>
+
 
 </project>

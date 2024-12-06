@@ -51,6 +51,11 @@ public class AppRouter {
             String locationOption = ctx.formParam("locationOption");
             String salaryOption = ctx.formParam("salaryOption");
             String employeeOption = ctx.formParam("employeeOption");
+            //取得した選択肢をウェブに送り返す．
+            model.put("categoryOption", selectedOption);
+            model.put("locationOption", locationOption);
+            model.put("salaryOption", salaryOption);
+            model.put("employeeOption", employeeOption);
             String queryStr = "";
 
             if (selectedOption != null && !selectedOption.isEmpty()) {
@@ -87,7 +92,7 @@ public class AppRouter {
                     result.add(new Company(company, sn.getURL(company), sn.getSupplement(company), sn.getPicturePath(company)));
                 }
             } else {
-                result.add(new Company("結果なし", "http://localhost:7000/JavaApp", "結果なし", ""));
+                result.add(new Company("結果なし", "http:/localhost:7000/JavaApp", "結果なし", ""));
             }
 
             model.put("result", result);

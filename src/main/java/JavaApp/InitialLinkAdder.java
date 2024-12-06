@@ -11,7 +11,7 @@ public class InitialLinkAdder {
     public static void addInitialLinks(SemanticNet semanticNet) {
         ArrayList<Link> initialLinks = new ArrayList<>();
         initialLinks.add(new Link("supplement", "一休", "【東証一部上場】～日本最大級のレストラン予約サイト～", semanticNet));
-        initialLinks.add(new Link("URL", "一休", "https://hackathon-x33o.onrender.com/JavaApp/Ikkyu", semanticNet));
+        initialLinks.add(new Link("URL", "一休", "http://localhost:7000/JavaApp/Ikkyu", semanticNet));
         initialLinks.add(new Link("employeeCount", "一休", "100～300人未満", semanticNet));
         initialLinks.add(new Link("averageSalary", "一休", "1000万円～1200万円", semanticNet));
         initialLinks.add(new Link("is-a", "一休", "旅行・ホテル", semanticNet));
