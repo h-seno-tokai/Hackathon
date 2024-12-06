@@ -20,15 +20,16 @@ class Node {
 
 	// ノードに到達するis-aリンクのテールノードを返す
 	public ArrayList<Node> getISATails() {
-		ArrayList<Node> isaTails = new ArrayList<Node>();
-		for (int i = 0; i < arriveAtMeLinks.size(); i++) {
-			Link theLink = (Link) arriveAtMeLinks.get(i);
+		ArrayList<Node> isaParents = new ArrayList<Node>();
+		for (Link theLink : departFromMeLinks) {
 			if ("is-a".equals(theLink.getLabel())) {
-				isaTails.add(theLink.getTail());
+				// theLink: thisNode(is child) =is-a=> parentNode
+				isaParents.add(theLink.getHead());
 			}
 		}
-		return isaTails;
+		return isaParents;
 	}
+
 
 	// ノードから出ていくリンクをリストに追加する
 	public void addDepartFromMeLinks(Link theLink) {

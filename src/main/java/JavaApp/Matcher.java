@@ -9,12 +9,14 @@ import java.util.StringTokenizer;
  * 2つの文字列が一致するかどうかを判定する
  */
 class Matcher {
+    SemanticNet sn;
     StringTokenizer st1;
     StringTokenizer st2;
     Map<String, String> vars;
 
-    Matcher() {
-        vars = new HashMap<String, String>();
+    Matcher(SemanticNet sn) {
+        vars = new HashMap<>();
+        this.sn = sn;
     }
 
     // 2つの文字列が一致するかどうかを判定し、bindings map に変数と値の対応を記録する
@@ -55,14 +57,29 @@ class Matcher {
 
     // 2つのトークンが一致するかどうかを判定する
     boolean tokenMatching(String token1, String token2) {
-        if (token1.equals(token2))
+        if (token1.equals(token2)) {
             return true;
+        }
+
         if (var(token1) && !var(token2))
             return varMatching(token1, token2);
         if (!var(token1) && var(token2))
             return varMatching(token2, token1);
+
+        // 両方定数で、異なる文字列の場合はis-aを一方向で考慮する
+        // token1: query側 (親を要求している概念)
+        // token2: link側 (子の概念かもしれない)
+        // isA(token2, token1) == true のとき、token2はtoken1の下位概念
+        // よってqueryで親を要求しているとき、子でもマッチ可能
+        if (!var(token1) && !var(token2)) {
+            if (sn.isA(token2, token1)) {
+                return true;
+            }
+        }
+
         return false;
     }
+
 
     // 変数と値の対応を記録する
     boolean varMatching(String vartoken, String token) {
